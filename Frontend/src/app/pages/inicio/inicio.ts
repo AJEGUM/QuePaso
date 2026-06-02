@@ -7,25 +7,27 @@ import { MensajePayload, UsuarioService } from '../../services/usuarios';
   selector: 'app-inicio',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './inicio.html', // <-- Enlace al archivo HTML separado
-  styleUrl: './inicio.css'      // Opcional, por si necesitas estilos específicos aquí
+  templateUrl: './inicio.html',
+  styleUrl: './inicio.css'
 })
 export class Inicio {
   // Inyección del servicio de Angular
   private readonly adminService = inject(UsuarioService);
 
+  // Control del tema (True = Oscuro, False = Claro)
+  isDarkMode = signal<boolean>(true);
+
   // Estados reactivos con Signals
   contenido = signal<string>('');
-  horasVisibilidad = signal<number>(1);
+  horasVisibilidad = signal<number>(1); // Se mantiene en 1 por defecto al estar oculto el slider
   cargando = signal<boolean>(false);
   
   respuestaExito = signal<{ id: string, expira_en: string } | null>(null);
   errorMsg = signal<string | null>(null);
 
-  // Escucha los cambios del slider de rango
-  actualizarHoras(event: Event): void {
-    const elemento = event.target as HTMLInputElement;
-    this.horasVisibilidad.set(Number(elemento.value));
+  // Alternar entre modo claro y oscuro
+  toggleTheme(): void {
+    this.isDarkMode.set(!this.isDarkMode());
   }
 
   // Envío del payload al Backend
@@ -36,9 +38,8 @@ export class Inicio {
     this.errorMsg.set(null);
     this.respuestaExito.set(null);
 
-    // TODO: Manejar este sesion_id de forma dinámica según tu lógica de sesión anónima
+    // Simplificado: El backend asocia automáticamente tu cookie de sesión
     const payload: MensajePayload = {
-      sesion_id: 'e69a8b66-0797-4b95-bc67-0c60f2bb9da1', 
       contenido: this.contenido().trim(),
       horas_visibilidad: this.horasVisibilidad()
     };
@@ -49,7 +50,7 @@ export class Inicio {
           id: res.id,
           expira_en: res.expira_en
         });
-        this.contenido.set(''); // Limpiamos la caja de texto
+        this.contenido.set(''); // Limpiamos el input
         this.cargando.set(false);
       },
       error: (err) => {

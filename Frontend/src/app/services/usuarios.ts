@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment.development';
 
 // Interfaz para tipar los datos que requiere tu backend
 export interface MensajePayload {
-  sesion_id: string;
+  sesion_id?: string;
   contenido?: string;
   horas_visibilidad?: number;
 }
