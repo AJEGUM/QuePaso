@@ -3,18 +3,31 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
-// Interfaz para tipar los datos que requiere tu backend
+// Interfaz para tipar los datos que requiere tu backend al publicar
 export interface MensajePayload {
   sesion_id?: string;
   contenido?: string;
   horas_visibilidad?: number;
 }
 
-// Interfaz para la respuesta que devuelve tu backend
+// Interfaz para la respuesta al publicar un mensaje
 export interface MensajeResponse {
   id: string;
   estado: string;
   expira_en: string;
+}
+
+export interface MensajeMuro {
+  id: string;
+  contenido: string;
+  creado_en: string;
+  expira_en: string;
+  autor: string;
+}
+
+export interface MuroResponse {
+  total: number;
+  mensajes: MensajeMuro[];
 }
 
 @Injectable({
@@ -29,5 +42,9 @@ export class UsuarioService {
 
   publicarMensaje(payload: MensajePayload): Observable<MensajeResponse> {
     return this.http.post<MensajeResponse>(`${this.baseUrl}/mensaje`, payload);
+  }
+
+  obtenerMuro(): Observable<MuroResponse> {
+    return this.http.get<MuroResponse>(`${this.baseUrl}/muro`, { withCredentials: true });
   }
 }

@@ -32,5 +32,22 @@ export const adminController = {
                 error: 'Error interno del servidor al procesar el mensaje' 
             });
         }
+    },
+
+    obtenerMuro: async (req, res) => {
+        try {
+            const mensajes = await usuariosService.listarMensajesMuro();
+            
+            // Retorno semántico con código HTTP 200 OK
+            return res.status(200).json({
+                total: mensajes.length,
+                mensajes
+            });
+        } catch (error) {
+            console.error('Error en adminController.obtenerMuro:', error);
+            return res.status(500).json({ 
+                error: 'Error interno del servidor al recuperar el muro de mensajes.' 
+            });
+        }
     }
 };

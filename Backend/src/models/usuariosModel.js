@@ -30,5 +30,23 @@ export const usuariosModel = {
         `;
         const [result] = await pool.execute(query, [id, sesion_id, contenido, expira_en, horas_visibilidad]);
         return result;
+    },
+
+    obtenerMensajesMuro: async () => {
+        const query = `
+            SELECT 
+                m.id,
+                m.contenido,
+                m.creado_en,
+                m.expira_en,
+                s.apodo AS autor_apodo
+            FROM mensaje m
+            INNER JOIN sesion s ON m.sesion_id = s.id
+            WHERE m.activo = 1 
+              AND m.expira_en > NOW()
+            ORDER BY m.creado_en DESC
+        `;
+        const [rows] = await pool.execute(query);
+        return rows;
     }
 };

@@ -1,0 +1,41 @@
+<div class="w-full flex flex-col justify-between h-full space-y-4">
+  
+  <div class="space-y-4 flex-1 pr-1">
+    @for (msg of mensajes(); track msg.id) {
+      <div [className]="isDarkMode()
+           ? 'bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md space-y-2 w-full transition-all'
+           : 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2 w-full transition-all'">
+        
+        <div class="flex justify-between items-center text-xs">
+          <div class="flex items-center gap-1.5 font-extrabold text-indigo-600 dark:text-indigo-400">
+            <span>👤</span>
+            <span>{{ msg.autor }}</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">
+            Expira: {{ msg.expira_en }}
+          </span>
+        </div>
+
+        <p [className]="isDarkMode() ? 'text-sm text-slate-200 leading-relaxed break-words' : 'text-sm text-slate-700 leading-relaxed break-words'">
+          {{ msg.contenido }}
+        </p>
+      </div>
+    } @empty {
+      @if (!cargando()) {
+        <div class="h-full flex flex-col items-center justify-center py-20">
+          <div [className]="isDarkMode() 
+               ? 'border-2 border-dashed border-slate-800 rounded-2xl p-10 text-center text-sm text-slate-600 max-w-sm' 
+               : 'border-2 border-dashed border-slate-200 rounded-2xl p-10 text-center text-sm text-slate-400 max-w-sm'">
+            💬 Silencio absoluto... Sé el primero en romper el hielo de forma anónima abajo.
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  @if (cargando()) {
+    <div class="text-center py-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
+      ⏳ Sincronizando sucesos...
+    </div>
+  }
+</div>

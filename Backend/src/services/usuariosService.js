@@ -40,5 +40,18 @@ export const usuariosService = {
         });
 
         return { id, estado: 'Mensaje publicado exitosamente', expira_en };
+    },
+
+    listarMensajesMuro: async () => {
+        const mensajes = await usuariosModel.obtenerMensajesMuro();
+        
+        // Retornamos los mensajes orquestados
+        return mensajes.map(msg => ({
+            id: msg.id,
+            contenido: msg.contenido,
+            creado_en: msg.creado_en,
+            expira_en: msg.expira_en,
+            autor: msg.autor_apodo
+        }));
     }
 };
