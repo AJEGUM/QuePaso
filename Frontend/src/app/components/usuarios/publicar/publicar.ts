@@ -13,7 +13,7 @@ import { MensajePayload, UsuarioService } from '../../../services/usuarios';
 export class Publicar {
   private readonly adminService = inject(UsuarioService);
 
-  // Recibe el tema desde el padre
+  // Recibe el tema visual desde el padre
   isDarkMode = input<boolean>(true);
 
   // NOTIFICA AL PADRE: Emite los datos cuando el mensaje se crea con éxito
@@ -21,6 +21,7 @@ export class Publicar {
 
   // Estados locales del formulario aislado
   contenido = signal<string>('');
+  horasVisibilidad = signal<number>(1);
   cargando = signal<boolean>(false);
 
   enviarMensaje(): void {
@@ -28,9 +29,10 @@ export class Publicar {
 
     this.cargando.set(true);
 
+    // Mapeo dinámico directo al payload
     const payload: MensajePayload = {
       contenido: this.contenido().trim(),
-      horas_visibilidad: 1
+      horas_visibilidad: this.horasVisibilidad() // 👈 Enviamos el tiempo real seleccionado por el usuario
     };
 
     this.adminService.publicarMensaje(payload).subscribe({
@@ -41,8 +43,9 @@ export class Publicar {
           expira_en: res.expira_en
         });
         
-        // 2. Limpiamos nuestro textarea local
+        // 2. Limpiamos nuestro estado local
         this.contenido.set(''); 
+        this.horasVisibilidad.set(1); // Reseteamos a 1 hora por defecto
         this.cargando.set(false);
       },
       error: (err) => {
@@ -53,14 +56,11 @@ export class Publicar {
   }
 
   autoCrescer(elemento: HTMLTextAreaElement): void {
-    // Reseteamos la altura inicial para calcular correctamente el scrollHeight
     elemento.style.height = 'auto';
-    // Le asignamos el tamaño del texto interno en pixeles
     elemento.style.height = `${elemento.scrollHeight}px`;
   }
 
   resetearAltura(elemento: HTMLTextAreaElement): void {
-    // Devuelve el input a su tamaño compacto de una sola fila tras presionar enviar
     elemento.style.height = 'auto';
   }
 }
