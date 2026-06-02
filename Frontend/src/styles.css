@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  /* Paleta de colores de fondo de la marca */
+  --color-brand-bg-dark: #020617;   /* slate-950 */
+  --color-brand-bg-light: #f8fafc;  /* slate-50 */
+  
+  /* Colores de las tarjetas */
+  --color-card-dark: #0f172a;       /* slate-900 */
+  --color-card-light: #ffffff;      /* white */
+
+  /* Bordes */
+  --color-border-dark: #1e293b;     /* slate-800 */
+  --color-border-light: #e2e8f0;    /* slate-200 */
+}
+
+/* Variables CSS estándar para manipulación dinámica opcional */
+:root {
+  --transition-speed: 300ms;
+  --font-tracking: tracking-tight;
+}
+
+a, button{
+    cursor: pointer;
+}

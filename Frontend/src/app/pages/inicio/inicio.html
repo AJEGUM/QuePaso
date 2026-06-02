@@ -1,0 +1,29 @@
+<div [className]="isDarkMode() 
+     ? 'h-screen bg-slate-950 text-slate-100 flex flex-col justify-between transition-colors duration-300 relative' 
+     : 'h-screen bg-slate-50 text-slate-900 flex flex-col justify-between transition-colors duration-300 relative'">
+  
+  <app-navbar 
+    [isDarkMode]="isDarkMode()"
+    [respuestaExito]="respuestaExito()"
+    [errorMsg]="errorMsg()"
+    (onToggleTheme)="toggleTheme()">
+  </app-navbar>
+
+  <div class="flex-1 overflow-y-auto p-4 w-full">
+    <div class="max-w-4xl mx-auto h-full">
+      <app-muro [isDarkMode]="isDarkMode()"></app-muro>
+    </div>
+  </div>
+
+  <div [className]="isDarkMode() 
+       ? 'bg-slate-900 border-t border-slate-800 p-4 sticky bottom-0 z-40' 
+       : 'bg-white border-t border-slate-200 p-4 sticky bottom-0 z-40'">
+    <div class="max-w-4xl mx-auto">
+      <app-publicar 
+        [isDarkMode]="isDarkMode()" 
+        (onPublicadoExito)="manejarMensajePublicado($event)">
+      </app-publicar>
+    </div>
+  </div>
+
+</div>
