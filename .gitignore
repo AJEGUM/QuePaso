@@ -1,0 +1,81 @@
+# ==========================================
+# 1. NODE.JS / BACKEND
+# ==========================================
+# Dependencias de Node
+node_modules/
+jspm_packages/
+
+# Logs de error y ejecución
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Directorios de compilación de TypeScript / NestJS / Express (si aplica)
+dist/
+build/
+out/
+
+# Cobertura de pruebas (Testing)
+coverage/
+.nyc_output/
+
+# Caché de herramientas
+.npm
+.eslintcache
+.prettiercache
+
+# ==========================================
+# 2. ANGULAR / FRONTEND
+# ==========================================
+# Directorio de compilación de Angular (.angular/cache es vital en versiones recientes)
+.angular/
+dist/
+/www
+
+# Archivos de configuración locales de Angular CLI
+.build_artifacts
+
+# ==========================================
+# 3. VARIABLES DE ENTORNO Y SEGURIDAD (¡CRÍTICO!)
+# ==========================================
+# Archivos de entorno (nunca los subas con credenciales reales)
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Certificados SSL locales
+*.pem
+*.key
+
+# ==========================================
+# 4. IDEs Y EDITORES DE CÓDIGO
+# ==========================================
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+
+# JetBrains (WebStorm, PhpStorm, etc.)
+.idea/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# 5. DOCKER & DEVOPS
+# ==========================================
+# En caso de que manejes datos persistentes locales en contenedores
+*.db
+*.sqlite
+
+# Ignorar archivos temporales de empaquetado si aplica
+*.tar.gz
