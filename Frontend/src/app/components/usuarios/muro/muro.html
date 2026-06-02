@@ -3,17 +3,67 @@
   <div class="space-y-4 flex-1 pr-1">
     @for (msg of mensajes(); track msg.id) {
       <div [className]="isDarkMode()
-           ? 'bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md space-y-2 w-full transition-all'
-           : 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2 w-full transition-all'">
+           ? 'bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md space-y-2 w-full transition-all relative'
+           : 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2 w-full transition-all relative'">
         
         <div class="flex justify-between items-center text-xs">
           <div class="flex items-center gap-1.5 font-extrabold text-indigo-600 dark:text-indigo-400">
             <span>👤</span>
             <span>{{ msg.autor }}</span>
           </div>
-          <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">
-            Expira: {{ msg.expira_en }}
-          </span>
+
+          <div class="flex items-center gap-2 relative">
+            <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">
+              Expira: {{ msg.expira_en }}
+            </span>
+
+            <button 
+              (click)="alternarMenuOpciones(msg.id, $event)"
+              class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 transition-colors"
+              title="Opciones de mensaje"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75h.008v.008H12v-.008Z" />
+              </svg>
+            </button>
+
+            @if (menuAbiertoId() === msg.id) {
+              <div [className]="isDarkMode()
+                   ? 'absolute right-0 top-7 z-30 w-48 bg-slate-950/95 backdrop-blur border border-slate-800 rounded-xl p-1.5 shadow-xl space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-100'
+                   : 'absolute right-0 top-7 z-30 w-48 bg-white/95 backdrop-blur border border-slate-200 rounded-xl p-1.5 shadow-lg space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-100'">
+                
+                <div class="px-2 py-1 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-900 mb-1">
+                  Reportar por:
+                </div>
+
+                <button (click)="enviarReporte(msg.id, 'spam')"
+                  class="w-full text-left px-2 py-1.5 text-xs font-medium text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors flex items-center gap-2">
+                  <span>📨</span> Correo Basura / Spam
+                </button>
+
+                <button (click)="enviarReporte(msg.id, 'contenido_explicito')"
+                  class="w-full text-left px-2 py-1.5 text-xs font-medium text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors flex items-center gap-2">
+                  <span>🔞</span> Contenido Explícito
+                </button>
+
+                <button (click)="enviarReporte(msg.id, 'violencia')"
+                  class="w-full text-left px-2 py-1.5 text-xs font-medium text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors flex items-center gap-2">
+                  <span>💥</span> Violencia / Agresión
+                </button>
+
+                <button (click)="enviarReporte(msg.id, 'ilegal')"
+                  class="w-full text-left px-2 py-1.5 text-xs font-medium text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors flex items-center gap-2">
+                  <span>⚖️</span> Actividad Ilegal
+                </button>
+
+                <button (click)="enviarReporte(msg.id, 'otro')"
+                  class="w-full text-left px-2 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2">
+                  <span>⚙️</span> Otro motivo
+                </button>
+
+              </div>
+            }
+          </div>
         </div>
 
         <p [className]="isDarkMode() ? 'text-sm text-slate-200 leading-relaxed break-words' : 'text-sm text-slate-700 leading-relaxed break-words'">

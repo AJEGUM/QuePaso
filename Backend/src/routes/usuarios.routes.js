@@ -7,5 +7,6 @@ const router = Router();
 // Endpoint semántico protegido por el validador de sesión transparente
 router.post('/mensaje', verificarOSesion, adminController.publicarMensaje);
 router.get('/muro', verificarOSesion, adminController.obtenerMuro);
+router.post('/reportar', verificarOSesion, adminController.denunciarMensaje);
 
 export default router;

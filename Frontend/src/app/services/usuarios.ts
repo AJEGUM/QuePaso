@@ -29,6 +29,17 @@ export interface MuroResponse {
   total: number;
   mensajes: MensajeMuro[];
 }
+export interface ReportePayload {
+  mensaje_id: string;
+  motivo: 'spam' | 'contenido_explicito' | 'violencia' | 'ilegal' | 'otro';
+}
+export interface ReporteResponse {
+  mensaje: string;
+  data: {
+    estado: string;
+    mensaje_id: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +57,9 @@ export class UsuarioService {
 
   obtenerMuro(): Observable<MuroResponse> {
     return this.http.get<MuroResponse>(`${this.baseUrl}/muro`, { withCredentials: true });
+  }
+
+  reportarMensaje(payload: ReportePayload): Observable<ReporteResponse> {
+    return this.http.post<ReporteResponse>(`${this.baseUrl}/reportar`, payload, { withCredentials: true });
   }
 }

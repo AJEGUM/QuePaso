@@ -48,5 +48,24 @@ export const usuariosModel = {
         `;
         const [rows] = await pool.execute(query);
         return rows;
+    },
+
+    verificarReporteExistente: async (mensajeId, ipHash) => {
+        const query = `
+            SELECT id FROM reporte 
+            WHERE mensaje_id = ? AND ip_hash_reportante = ?
+        `;
+        const [rows] = await pool.execute(query, [mensajeId, ipHash]);
+        return rows.length > 0;
+    },
+
+    // Registrar la denuncia en la base de datos
+    crearReporte: async (mensajeId, ipHash, motivo) => {
+        const query = `
+            INSERT INTO reporte (mensaje_id, ip_hash_reportante, motivo)
+            VALUES (?, ?, ?)
+        `;
+        const [result] = await pool.execute(query, [mensajeId, ipHash, motivo]);
+        return result;
     }
 };

@@ -1,6 +1,6 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MensajeMuro, UsuarioService } from '../../../services/usuarios';
+import { MensajeMuro, UsuarioService, ReportePayload } from '../../../services/usuarios';
 
 @Component({
   selector: 'app-muro',
@@ -12,19 +12,18 @@ import { MensajeMuro, UsuarioService } from '../../../services/usuarios';
 export class Muro implements OnInit {
   private readonly usuarioService = inject(UsuarioService);
 
-  // Recibe el estado del tema desde el padre de forma reactiva
   isDarkMode = input<boolean>(true);
 
-  // Estados reactivos con Signals para la interfaz
   mensajes = signal<MensajeMuro[]>([]);
   cargando = signal<boolean>(false);
   errorMsg = signal<string | null>(null);
+  
+  menuAbiertoId = signal<string | null>(null);
 
   ngOnInit(): void {
     this.cargarMuro();
   }
 
-  // Llama al endpoint GET de tu servicio integrado
   cargarMuro(): void {
     this.cargando.set(true);
     this.errorMsg.set(null);
@@ -40,5 +39,43 @@ export class Muro implements OnInit {
         this.cargando.set(false);
       }
     });
+  }
+
+  alternarMenuOpciones(id: string, evento: Event): void {
+    evento.stopPropagation();
+    if (this.menuAbiertoId() === id) {
+      this.menuAbiertoId.set(null);
+    } else {
+      this.menuAbiertoId.set(id);
+    }
+  }
+
+  // Recibe de forma dinámica el motivo exacto disparado desde el HTML
+  enviarReporte(mensajeId: string, motivo: 'spam' | 'contenido_explicito' | 'violencia' | 'ilegal' | 'otro'): void {
+    this.menuAbiertoId.set(null); // Cerramos el menú inmediatamente
+
+    const payload: ReportePayload = {
+      mensaje_id: mensajeId,
+      motivo: motivo
+    };
+
+    this.usuarioService.reportarMensaje(payload).subscribe({
+      next: (res) => {
+        alert('Mensaje reportado con éxito. El equipo de administración lo revisará.');
+      },
+      error: (err) => {
+        console.error(err);
+        if (err.status === 409) {
+          alert('Ya has enviado una denuncia para este mensaje anteriormente.');
+        } else {
+          alert('Hubo un problema al procesar el reporte.');
+        }
+      }
+    });
+  }
+
+  @HostListener('document:click')
+  cerrarMenus(): void {
+    this.menuAbiertoId.set(null);
   }
 }
