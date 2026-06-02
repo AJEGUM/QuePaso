@@ -20,6 +20,9 @@ export class Muro implements OnInit {
   
   menuAbiertoId = signal<string | null>(null);
 
+  // 👇 NUEVO: Mantiene el registro de qué IDs de mensajes están expandidos actualmente
+  mensajesExpandidos = signal<Set<string>>(new Set<string>());
+
   ngOnInit(): void {
     this.cargarMuro();
   }
@@ -41,6 +44,17 @@ export class Muro implements OnInit {
     });
   }
 
+  // 👇 NUEVO: Añade o remueve el ID del mensaje del Set para controlar la vista comprimida
+  alternarExpansionMensaje(id: string): void {
+    const copiaSet = new Set(this.mensajesExpandidos());
+    if (copiaSet.has(id)) {
+      copiaSet.delete(id);
+    } else {
+      copiaSet.add(id);
+    }
+    this.mensajesExpandidos.set(copiaSet);
+  }
+
   alternarMenuOpciones(id: string, evento: Event): void {
     evento.stopPropagation();
     if (this.menuAbiertoId() === id) {
@@ -50,9 +64,8 @@ export class Muro implements OnInit {
     }
   }
 
-  // Recibe de forma dinámica el motivo exacto disparado desde el HTML
   enviarReporte(mensajeId: string, motivo: 'spam' | 'contenido_explicito' | 'violencia' | 'ilegal' | 'otro'): void {
-    this.menuAbiertoId.set(null); // Cerramos el menú inmediatamente
+    this.menuAbiertoId.set(null);
 
     const payload: ReportePayload = {
       mensaje_id: mensajeId,
