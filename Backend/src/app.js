@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-// import adminRoutes from './routes/admin.routes.js';
+import usuariosRoutes from './routes/usuarios.routes.js';
 
 const app = express();
 
@@ -20,6 +20,6 @@ app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // 3. Enrutamiento del sistema (Definición de endpoints semánticos)
-// app.use('/api/admin', adminRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 
 export { app };

@@ -1,21 +1,31 @@
-import { adminService } from '../services/usuariosService.js';
+import { usuariosService } from '../services/usuariosService.js';
 
 export const adminController = {
     publicarMensaje: async (req, res) => {
         try {
-            const { sesion_id, contenido, horas_visibilidad } = req.body;
+            const { contenido, horas_visibilidad } = req.body;
+            
+            // Extraído directamente desde el middleware de forma transparente
+            const sesion_id = req.sesion_id; 
 
-            // Validación básica del parámetro obligatorio
-            if (!sesion_id) {
+            // Validación del contenido (el check de tu DB no permite vacíos ni puros espacios)
+            if (!contenido || !contenido.trim()) {
                 return res.status(400).json({ 
-                    error: 'El parámetro sesion_id es obligatorio' 
+                    error: 'El contenido del mensaje no puede estar vacío.' 
                 });
             }
 
-            // Ejecutar la lógica de negocio desde el objeto del servicio
-            const resultado = await adminService.subirMensaje({ sesion_id, contenido, horas_visibilidad });
+            const resultado = await usuariosService.subirMensaje({ 
+                sesion_id, 
+                contenido, 
+                horas_visibilidad 
+            });
 
-            return res.status(201).json(resultado);
+            // Agregamos el apodo anónimo asignado al cliente en el response por si deseas mostrarlo en el frontend
+            return res.status(201).json({
+                ...resultado,
+                autorAnonimo: req.apodo
+            });
         } catch (error) {
             console.error('Error en adminController.publicarMensaje:', error);
             return res.status(500).json({ 
